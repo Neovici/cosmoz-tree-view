@@ -1,19 +1,21 @@
 {
-  "name": "@neovici/cosmoz-component",
-  "version": "1.5.1",
-  "description": "Template for Neovici public web components",
+  "name": "@neovici/cosmoz-tree-view",
+  "version": "0.0.0",
+  "description": "Tree view web component: nested, expandable, virtualized rows (Untitled UI tree view)",
   "keywords": [
     "web-components",
     "pion",
-    "lit-html"
+    "lit-html",
+    "tree",
+    "treeview"
   ],
-  "homepage": "https://github.com/Neovici/cosmoz-component#readme",
+  "homepage": "https://github.com/Neovici/cosmoz-tree-view#readme",
   "bugs": {
-    "url": "https://github.com/Neovici/cosmoz-component/issues"
+    "url": "https://github.com/Neovici/cosmoz-tree-view/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Neovici/cosmoz-component.git"
+    "url": "git+https://github.com/Neovici/cosmoz-tree-view.git"
   },
   "license": "Apache-2.0",
   "author": "Neovici Development",
@@ -43,10 +45,24 @@
     "types"
   ],
   "exports": {
-    ".": "./dist/index.js",
-    "./cosmoz-component": "./dist/component.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./cosmoz-tree-view": {
+      "types": "./dist/cosmoz-tree-view.d.ts",
+      "default": "./dist/cosmoz-tree-view.js"
+    },
+    "./flatten": {
+      "types": "./dist/flatten.d.ts",
+      "default": "./dist/flatten.js"
+    }
   },
   "dependencies": {
+    "@lit-labs/virtualizer": "^2.1.1",
+    "@neovici/cosmoz-icons": "^1.6.0",
+    "@neovici/cosmoz-tokens": "^3.2.1 || ^4.0.0",
+    "@neovici/cosmoz-utils": "^6.23.0",
     "@pionjs/pion": "^2.5.2",
     "lit-html": "^3.3.1"
   },
@@ -54,6 +70,7 @@
     "@changesets/cli": "^3.0.3",
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
+    "@fontsource-variable/geist": "^5.3.0",
     "@neovici/cfg": "^2.15.0",
     "@neovici/testing": "^2.3.0",
     "@playwright/test": "1.60.0",
@@ -68,6 +85,7 @@
     "husky": "^9.0.0",
     "jsdom": "^29.0.1",
     "lint-staged": "^17.0.7",
+    "remark-gfm": "^4.0.1",
     "shadow-dom-testing-library": "^1.13.1",
     "sinon": "^22.0.0",
     "storybook": "^10.0.0",
