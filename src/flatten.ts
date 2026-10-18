@@ -23,6 +23,7 @@ export const flatten = <T>(
 		getChildren = defaultGetChildren as NonNullable<
 			TreeViewAccessors<T>['getChildren']
 		>,
+		hasChildren: canExpand,
 	}: TreeViewAccessors<T> = {},
 ): Row<T>[] => {
 	const rows: Row<T>[] = [];
@@ -31,7 +32,7 @@ export const flatten = <T>(
 		nodes.forEach((node, i) => {
 			const id = getId(node);
 			const children = getChildren(node);
-			const hasChildren = (children?.length ?? 0) > 0;
+			const hasChildren = canExpand?.(node) ?? (children?.length ?? 0) > 0;
 			const isExpanded = hasChildren && expanded.has(id);
 			rows.push({
 				node,
@@ -44,7 +45,7 @@ export const flatten = <T>(
 				expanded: isExpanded,
 			});
 			if (isExpanded) {
-				visit(children!, level + 1, id);
+				visit(children ?? [], level + 1, id);
 			}
 		});
 	};
@@ -88,9 +89,10 @@ export const keyAction = <T>(
 				: undefined;
 		case 'ArrowRight':
 			if (!row.hasChildren) return undefined;
-			return row.expanded
+			if (!row.expanded) return { type: 'expand', id: row.id };
+			return rows[index + 1]?.parentId === row.id
 				? { type: 'focus', index: index + 1 }
-				: { type: 'expand', id: row.id };
+				: undefined;
 		case 'ArrowLeft': {
 			if (row.expanded) return { type: 'collapse', id: row.id };
 			if (row.parentId == null) return undefined;

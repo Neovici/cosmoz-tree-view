@@ -16,6 +16,19 @@ const tree = [
 const ids = (rows: { id: string }[]) => rows.map((r) => r.id);
 
 describe('flatten', () => {
+	it('offers expansion for children that have not loaded yet', () => {
+		const rows = flatten(
+			[{ id: 'remote' }, { id: 'sibling' }],
+			new Set(['remote']),
+			{ hasChildren: (node) => node.id === 'remote' },
+		);
+		expect(rows[0]).toMatchObject({ hasChildren: true, expanded: true });
+		expect(keyAction(rows, 0, 'ArrowRight')).toBeUndefined();
+		expect(keyAction(rows, 0, 'ArrowLeft')).toEqual({
+			type: 'collapse',
+			id: 'remote',
+		});
+	});
 	it('shows only roots when nothing is expanded', () => {
 		expect(ids(flatten(tree, new Set()))).toEqual(['a', 'b']);
 	});

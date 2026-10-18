@@ -90,11 +90,12 @@ Story: **Controlled**.
 
 For data that isn't `{ id, label, children }`, pass accessors. They must be stable functions (define them once, not inline in the template), because the tree recomputes its rows when they change.
 
-| Accessor      | Default                   | Returns                     |
-| ------------- | ------------------------- | --------------------------- |
-| `getId`       | `node.id`                 | a stable, unique string id  |
-| `getLabel`    | `node.label ?? node.name` | the row text                |
-| `getChildren` | `node.children`           | an array, or nothing (leaf) |
+| Accessor      | Default                   | Returns                                              |
+| ------------- | ------------------------- | ---------------------------------------------------- |
+| `getId`       | `node.id`                 | a stable, unique string id                           |
+| `getLabel`    | `node.label ?? node.name` | the row text                                         |
+| `getChildren` | `node.children`           | an array, or nothing (leaf)                          |
+| `hasChildren` | child-array length        | whether a branch can expand before its children load |
 
 Example with `@neovici/cosmoz-tree` data (path locators as ids, `children` as an object map):
 
