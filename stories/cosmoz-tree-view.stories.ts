@@ -176,6 +176,23 @@ export const HundredThousandChildren: Story = {
 				expect(rows(canvas).length).toBeLessThan(100);
 			},
 		);
+		await step(
+			'Keeps a keyboard entry point after the active row scrolls out',
+			async () => {
+				const tree = canvas.getByShadowRole('tree');
+				tree.scrollTop = 0;
+				await waitFor(() =>
+					expect(tree.querySelector('[data-id="wide.50000"]')).toBeNull(),
+				);
+				await waitFor(() => expect(tree.tabIndex).toBe(0));
+				tree.focus();
+				await waitFor(() =>
+					expect(hasFocus(tree.querySelector('[data-id="wide.50000"]'))).toBe(
+						true,
+					),
+				);
+			},
+		);
 	},
 };
 

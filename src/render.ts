@@ -1,3 +1,4 @@
+import type { RangeChangedEvent } from '@lit-labs/virtualizer/events.js';
 import {
 	virtualize,
 	type VirtualizerHostElement,
@@ -18,6 +19,10 @@ interface State<T> {
 	select: (row: Row<T>) => void;
 	activate: (row: Row<T>) => void;
 	onKeyDown: (e: KeyboardEvent) => void;
+	treeTabIndex: number;
+	focusActiveItem: () => void;
+	onRowFocus: (row: Row<T>) => void;
+	onRangeChanged: (event: RangeChangedEvent) => void;
 }
 
 const stop = (e: Event) => e.stopPropagation();
@@ -33,6 +38,10 @@ export const render = <T>(
 		select,
 		activate,
 		onKeyDown,
+		treeTabIndex,
+		focusActiveItem,
+		onRowFocus,
+		onRangeChanged,
 	}: State<T>,
 ) => {
 	const renderRow = (row: Row<T> | undefined) => {
@@ -51,6 +60,7 @@ export const render = <T>(
 			aria-expanded=${row.hasChildren ? String(row.expanded) : nothing}
 			aria-selected=${String(isSelected)}
 			tabindex=${row.id === tabStopId ? 0 : -1}
+			@focus=${() => onRowFocus(row)}
 			@click=${() => select(row)}
 			@dblclick=${() => activate(row)}
 		>
@@ -94,6 +104,11 @@ export const render = <T>(
 		class="tree"
 		part="tree"
 		aria-label=${ifDefined(label)}
+		tabindex=${treeTabIndex}
+		@rangeChanged=${onRangeChanged}
+		@focus=${(event: FocusEvent) => {
+			if (event.target === event.currentTarget) focusActiveItem();
+		}}
 		@keydown=${onKeyDown}
 		${ref((el) => {
 			scrollerRef.current = el as VirtualizerHostElement | undefined;

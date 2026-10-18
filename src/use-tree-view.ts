@@ -1,3 +1,4 @@
+import type { RangeChangedEvent } from '@lit-labs/virtualizer/events.js';
 import {
 	virtualizerRef,
 	type VirtualizerHostElement,
@@ -146,10 +147,22 @@ const handleKey = <T>(e: KeyboardEvent, ctx: KeyContext<T>) => {
 export const useTreeView = <T>(host: HTMLElement, props: Props<T>) => {
 	const [selected, setSelected] = useProperty<string | undefined>('selected');
 	const [activeId, setActiveId] = useState<string | undefined>(undefined);
+	const [range, setRange] = useState({ first: -1, last: -1 });
+	useEffect(() => setActiveId(selected), [selected]);
 	const scrollerRef = useRef<VirtualizerHostElement | undefined>(undefined);
 	const { rows, indexOf, toggle } = useRows(props);
 	const revealed = useRevealSelection(selected, indexOf, scrollerRef);
 	const tabStopId = pickTabStop(rows, indexOf, activeId, selected);
+	const tabStopIndex = indexOf.get(tabStopId!) ?? -1;
+	const treeTabIndex =
+		rows.length && (tabStopIndex < range.first || tabStopIndex > range.last)
+			? 0
+			: -1;
+	const focusActiveItem = () => {
+		if (tabStopIndex >= 0) {
+			revealRow(scrollerRef.current, tabStopIndex, tabStopId!);
+		}
+	};
 
 	const select = useCallback((row: Row<T>) => {
 		revealed.current = row.id;
@@ -173,10 +186,7 @@ export const useTreeView = <T>(host: HTMLElement, props: Props<T>) => {
 	// tools call it on the host and must not have focus redirected.
 	useImperativeApi(
 		{
-			focusActiveItem: () => {
-				const index = indexOf.get(tabStopId!);
-				if (index != null) revealRow(scrollerRef.current, index, tabStopId!);
-			},
+			focusActiveItem,
 		},
 		[indexOf, tabStopId],
 	);
@@ -204,5 +214,10 @@ export const useTreeView = <T>(host: HTMLElement, props: Props<T>) => {
 		select,
 		activate,
 		onKeyDown,
+		treeTabIndex,
+		focusActiveItem,
+		onRowFocus: (row: Row<T>) => setActiveId(row.id),
+		onRangeChanged: ({ first, last }: RangeChangedEvent) =>
+			setRange({ first, last }),
 	};
 };
