@@ -13,6 +13,8 @@ export interface TreeViewAccessors<T> {
 	getLabel?: (node: T) => string;
 	/** Child nodes, or nothing for a leaf. Defaults to `node.children`. */
 	getChildren?: (node: T) => readonly T[] | null | undefined;
+	/** Whether a node can expand, including children not loaded yet. */
+	hasChildren?: (node: T) => boolean;
 }
 
 export interface TreeViewRowState {

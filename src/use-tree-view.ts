@@ -70,7 +70,7 @@ const pickTabStop = <T>(
 	...candidates: (string | undefined)[]
 ) => candidates.find((id) => id != null && indexOf.has(id)) ?? rows[0]?.id;
 
-const useRows = <T>({ items, getId, getChildren }: Props<T>) => {
+const useRows = <T>({ items, getId, getChildren, hasChildren }: Props<T>) => {
 	const [expandedProp, setExpanded] = useProperty<readonly string[]>(
 		'expanded',
 		() => [],
@@ -78,8 +78,8 @@ const useRows = <T>({ items, getId, getChildren }: Props<T>) => {
 	const expanded = expandedProp ?? NO_IDS;
 	const expandedSet = useMemo(() => new Set(expanded), [expanded]);
 	const rows = useMemo(
-		() => flatten(items, expandedSet, { getId, getChildren }),
-		[items, expandedSet, getId, getChildren],
+		() => flatten(items, expandedSet, { getId, getChildren, hasChildren }),
+		[items, expandedSet, getId, getChildren, hasChildren],
 	);
 	const indexOf = useMemo(
 		() => new Map(rows.map((row, i) => [row.id, i] as const)),
