@@ -180,6 +180,12 @@ export const HundredThousandChildren: Story = {
 			'Keeps a keyboard entry point after the active row scrolls out',
 			async () => {
 				const tree = canvas.getByShadowRole('tree');
+				// Initial scroll corrections settle over two animation frames.
+				await new Promise<void>((resolve) =>
+					requestAnimationFrame(() =>
+						requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+					),
+				);
 				tree.scrollTop = 0;
 				await waitFor(() =>
 					expect(tree.querySelector('[data-id="wide.50000"]')).toBeNull(),
