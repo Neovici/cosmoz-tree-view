@@ -1,0 +1,42 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Introduction" />
+
+# Cosmoz Tree View
+
+A tree of nested, expandable rows after the [Untitled UI tree view](https://www.untitledui.com/react/components/tree-views). Click a row to select it, the chevron to expand it; double-click or <kbd>Enter</kbd> activates it.
+
+Only expanded branches are walked and rows are virtualized, so very large trees stay fast — see [Hundred Thousand Children](?path=/story/cosmoztreeview--hundred-thousand-children).
+
+## Modes
+
+| Mode         | Story                                                                               | What it shows                                                                                       |
+| ------------ | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Uncontrolled | [Default](?path=/story/cosmoztreeview--default)                                     | The tree owns `selected` / `expanded`; click to select, chevron to expand, double-click to activate |
+| Keyboard     | [Keyboard](?path=/story/cosmoztreeview--keyboard)                                   | Arrow keys, Home/End, Space, Enter; the selected row is the tab stop                                |
+| Controlled   | [Controlled](?path=/story/cosmoztreeview--controlled)                               | A host owns the state; `preventDefault()` on the change events and pass the value back              |
+| Custom data  | [Custom Accessors](?path=/story/cosmoztreeview--custom-accessors)                   | `getId` / `getLabel` / `getChildren` for cosmoz-tree style nodes                                    |
+| Icons        | [With Icons](?path=/story/cosmoztreeview--with-icons)                               | `renderIcon(node, state)`                                                                           |
+| Sizes        | [Medium](?path=/story/cosmoztreeview--medium)                                       | `size="md"`; `sm` is the default                                                                    |
+| Large trees  | [Hundred Thousand Children](?path=/story/cosmoztreeview--hundred-thousand-children) | 100,000 children, centred on the selection, ~45 rows in the DOM                                     |
+| Empty        | [Empty](?path=/story/cosmoztreeview--empty)                                         | No items: an empty `role="tree"`                                                                    |
+
+Every story is also a test: its play function runs in Chromium with `npm test`.
+
+## Quick start
+
+```js
+import '@neovici/cosmoz-tree-view/cosmoz-tree-view';
+
+html`<cosmoz-tree-view
+	style="height: 320px"
+	label="Organisation"
+	.items=${items}
+	@selected-changed=${(e) => console.log(e.detail.value)}
+	@activate=${(e) => console.log(e.detail.id)}
+></cosmoz-tree-view>`;
+```
+
+Give the element a height: the rows scroll inside it.
+
+The full API — properties, events, methods, keyboard, CSS parts — is in the [README](https://github.com/Neovici/cosmoz-tree-view#readme).
