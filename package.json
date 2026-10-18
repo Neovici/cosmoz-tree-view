@@ -1,6 +1,6 @@
 {
   "name": "@neovici/cosmoz-tree-view",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Tree view web component: nested, expandable, virtualized rows (Untitled UI tree view)",
   "keywords": [
     "web-components",
